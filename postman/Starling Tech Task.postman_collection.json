@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "51e04c56-f38d-4e20-a506-f02d5b5ba5da",
+		"name": "Starling Tech Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Get Accounts For Account Holder",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/accounts",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Balance for Account",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/accounts/{{accountUid}}/balance",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"accounts",
+								"{{accountUid}}",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Get Transactions for Account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/feed/account/{{accountUid}}/category/{{categoryUid}}?changesSince=1970-01-01T00:00:00.000Z",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"feed",
+								"account",
+								"{{accountUid}}",
+								"category",
+								"{{categoryUid}}"
+							],
+							"query": [
+								{
+									"key": "changesSince",
+									"value": "1970-01-01T00:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Saving Goals",
+			"item": [
+				{
+					"name": "Get Saving Goals",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/account/{{accountUid}}/savings-goals",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"account",
+								"{{accountUid}}",
+								"savings-goals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Saving Goal",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Trip to Paris\",\r\n  \"currency\": \"GBP\",\r\n  \"target\": {\r\n    \"currency\": \"GBP\",\r\n    \"minorUnits\": 10000\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/account/{{accountUid}}/savings-goals",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"account",
+								"{{accountUid}}",
+								"savings-goals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Savings Goal",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": {\r\n    \"currency\": \"GBP\",\r\n    \"minorUnits\": 5000\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/account/{{accountUid}}/savings-goals/{{savingsGoalUid}}/add-money/{{$guid}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"account",
+								"{{accountUid}}",
+								"savings-goals",
+								"{{savingsGoalUid}}",
+								"add-money",
+								"{{$guid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Savings Goal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/account/{{accountUid}}/savings-goals/{{savingsGoalUid}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"account",
+								"{{accountUid}}",
+								"savings-goals",
+								"{{savingsGoalUid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Savings Goal",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v2/account/{{accountUid}}/savings-goals/{{savingsGoalUid}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"account",
+								"{{accountUid}}",
+								"savings-goals",
+								"{{savingsGoalUid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Account Holder Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v2/account-holder/individual",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"account-holder",
+						"individual"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJQUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_31Uy5KbMBD8lRTnnS0MWvO45ZYfyAcM0shWrZAoSexmK5V_j0DCGMeVm7t7Hj2jwb8L5X3RFzgpEDTaVx_QaWUuA5r3V27H4qXw8xAjqoYRETKQVTUA4xIBGa9A8oZa3jWN4G8xmH5NRX86M8bq8q1pXgqFIRE1Y6eFQM7tbMIPqwW5n0rE2o2s26qsCM4Da4G1HYOuKhG6hjd1VZ6auilj7WDfyaSMSmA7UIyLsSWwt1YA4nmAjqKVoTx3paxiRhzrO-fkfcqSXdc1J1ZBV8sK2IAnaKk5w8BbarGkuh6GZWBuJ1qWkpwC19aT6B2h-LZx19U-GBzpqRC-pgdBCTJBSUXuyGvlw4HJQAgXjfckVLiBpISA_DrSLXLHn04F-oZzuFqnfHxGUEaoDyVm1Cl4QI2GZ2scnQBuTXBWp0YLkzVrpHIjBmUNWAlyNsLfJH_rvoHUms8-2HEbkUZUubCmaMRcepwm_XVDa9SIRmCgXpCmWGKDWXPvFJZBJkeSHEXv_n9SspG0SSOnuIFAF7fOcZ_4r5hTyfErbtONFDC6wZ5HuKoZr0NN-EW0SQnkIRLYg0CNeMkzJW3_CcGh8ch3h5GGYdbv_faStFN7t4T3hglvBZZ7iLc1qrDX1JbHO7irsBJgl4N4ZHOWs1LpzX6a50CtUY44qSkcgD9KabkeP-KDebjY3ceBy9McuLXOPZMWFp_8WYldfFJrF1NRfiUxaxKQF5ZpCiEOOE8ZTrh9MPHfcT1csE7ctT-yW98j-yQf7Ke58YHWF-P-45GahMzUPHju4jaXQ9m63HNr1P01rQ_2eF7Fn7-ekIOV9gUAAA.ri6sn2VQPTfG8O5qh96nu6crNEZuR_FIUYLCd8KEa3HKGiUfPDonkNouXr30uEde7JvlAqGQgp2SjOT9mQOFA2YRyQQEnGzJBPoGC2iVL7Y8a2qoKO5Ap2NJw843EntXtWmMtU3MMswCdZeDB7Zs1nk_0czSy_QirnuQVj0jrwR_93bSjx2MmflL3hpevWURjHAbM_FJW-ghs9btQq6-rftlAvN6LzycvQODjD5v6coRxnrmnQ1_RZPsmJorXSefyPfEHUdSVRHheV859QDe3AKJV5MqrdkjrRv5B1pG-L0LAk7Q1b6yxe6hXd5k8whTH2Tcb-yVhOsGNfivA61Hz7Gp8FeWjcjNGZSd27KrE0i_v6D9v5HZEt1Lp8zGKW4ACsFuTRSJXFcOntMSLADk-GB_LZbRZ5vE89wK8s5MzXX4VgKuBSCxhOGGibSsnS0dTt-TxVtxGzCy24ckrdEMo5RH3HDcueH7KYRJCqt0weRePFCJau3B9ugjY05-nQcwR0MTVFNFZjz4sGlatkhzLbXtJMafhwYxDME5nNdFUOpiXwDXSwt7ZrpOkwRrkWLyCbAzWc5wHBnZEyugiw0D9oQ3hcSk8SDD8f1LDpCWoFcShFhTEIYG5S3xD4jLCCuklRjeYJPdRc-Pmgb-6nYsHyEggxQRrTRv0ZeONmrqLLA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "https://api-sandbox.starlingbank.com"
+		}
+	]
+}
