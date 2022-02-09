@@ -8,4 +8,12 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FeedItem {
 	private CurrencyAndAmount amount;
+	private String direction;
+
+	public static FeedItem outgoing(final CurrencyAndAmount amount) {
+		final var fi = new FeedItem();
+		fi.setDirection("OUT");
+		fi.setAmount(amount);
+		return fi;
+	}
 }

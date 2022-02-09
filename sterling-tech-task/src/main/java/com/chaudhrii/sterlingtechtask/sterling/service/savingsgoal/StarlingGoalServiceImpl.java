@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.chaudhrii.sterlingtechtask.core.config.StarlingProperties;
 import com.chaudhrii.sterlingtechtask.core.exception.StarlingException;
+import com.chaudhrii.sterlingtechtask.sterling.api.SavingsGoal;
 import com.chaudhrii.sterlingtechtask.sterling.api.SavingsGoalList;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class StarlingGoalServiceImpl {
 		var goals = new SavingsGoalList(Collections.emptyList());
 
 		try {
-			log.debug("Getting All Account Records from Starling...");
+			log.debug("Getting All Savings Goal Records from Starling...");
 			final var response =
 					restTemplate.getForEntity(
 							starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals",
@@ -47,5 +48,31 @@ public class StarlingGoalServiceImpl {
 
 		log.debug("Retrieved {} Saving Goal Records", goals.getSavingsGoals().size());
 		return goals;
+	}
+
+	public SavingsGoal getSavingsGoal(final String accountUid, final String savingsGoalUid) {
+		SavingsGoal goal = null;
+
+		try {
+			log.debug("Getting Savings Goal from Starling...");
+			final var response =
+					restTemplate.getForEntity(
+							starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals/{savingsGoalUid}",
+							SavingsGoal.class,
+							accountUid, savingsGoalUid);
+			final var responseBody = response.getBody();
+			log.debug("Response: {}", response);
+
+			if (null != responseBody) {
+				goal = responseBody;
+			}
+
+		} catch (final Exception e) {
+			log.error(FAILURE);
+			throw new StarlingException(FAILURE, e);
+		}
+
+		log.debug("Retrieved {} Saving Goal Record", goal);
+		return goal;
 	}
 }

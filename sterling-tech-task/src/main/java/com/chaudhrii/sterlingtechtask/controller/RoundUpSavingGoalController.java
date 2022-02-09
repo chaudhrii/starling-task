@@ -9,12 +9,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chaudhrii.sterlingtechtask.api.RoundUpSavingsGoalRequest;
+import com.chaudhrii.sterlingtechtask.service.RoundUpSavingsGoalServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
 public class RoundUpSavingGoalController {
+
+	private RoundUpSavingsGoalServiceImpl service;
+
+	public RoundUpSavingGoalController(final RoundUpSavingsGoalServiceImpl service) {
+		this.service = service;
+	}
+
 	@PostMapping(
 			path = "/account/{accountUid}/savings-goal/create-goal",
 			produces = MediaType.APPLICATION_JSON_VALUE,
@@ -25,6 +33,7 @@ public class RoundUpSavingGoalController {
 			@RequestBody final RoundUpSavingsGoalRequest request
 	) {
 		log.info("Creating Round Up Savings Goal. accountUid: {}, request: {}", accountUid, request);
+		service.createRoundUpSavingsGoal(accountUid, request);
 		return ResponseEntity.ok(null); // probably should be 201
 	}
 }

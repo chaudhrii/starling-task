@@ -15,6 +15,8 @@ future adventures.
   - Defaults to 7 days
     - Externalised
 - Customer Account Holder UID is provided as a param
+- Rounding up only considers 'Spending' transactions i.e. OUTgoing
+- All currencies are the same (not checked)
 
 ## Implementation Details
 - Java 11

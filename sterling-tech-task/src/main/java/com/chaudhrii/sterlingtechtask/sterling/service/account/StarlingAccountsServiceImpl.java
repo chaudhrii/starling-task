@@ -51,6 +51,7 @@ public class StarlingAccountsServiceImpl implements StarlingAccountsService {
 		return accounts;
 	}
 
+	@Override
 	public Balance getAccountBalance(final String accountUid) {
 		Balance balance = null;
 		try {
