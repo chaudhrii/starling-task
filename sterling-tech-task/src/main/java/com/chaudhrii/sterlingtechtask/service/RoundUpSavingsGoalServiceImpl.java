@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.chaudhrii.sterlingtechtask.api.RoundUpSavingsGoalRequest;
+import com.chaudhrii.sterlingtechtask.core.exception.StarlingException;
 import com.chaudhrii.sterlingtechtask.sterling.api.CurrencyAndAmount;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItem;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItems;
+import com.chaudhrii.sterlingtechtask.sterling.api.SavingsGoal;
 import com.chaudhrii.sterlingtechtask.sterling.service.account.StarlingAccountsService;
 import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.StarlingGoalService;
 import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.request.SavingsGoalRequest;
@@ -35,7 +37,7 @@ public class RoundUpSavingsGoalServiceImpl {
 		this.goalService = goalService;
 	}
 
-	public void createRoundUpSavingsGoal(final String accountUid, final RoundUpSavingsGoalRequest request) {
+	public SavingsGoal createRoundUpSavingsGoal(final String accountUid, final RoundUpSavingsGoalRequest request) {
 		final var balance = accountsService.getAccountBalance(accountUid);
 		if (null == balance) {
 			throw new IllegalArgumentException("Account does not exist!");
@@ -58,9 +60,19 @@ public class RoundUpSavingsGoalServiceImpl {
 		final var roundUpSum = calculateRoundUpSum(feedItems);
 		log.debug("Round up sum {}", roundUpSum);
 
+		// TODO : If Sum is 0 - no point creating a goal?
+
 		// create savings goal
 		final var savingsGoalRequest = SavingsGoalRequest.of(request.getSavingsGoalName(), currency, CurrencyAndAmount.of(currency, roundUpSum));
-		goalService.createSavingsGoal(accountUid, savingsGoalRequest);
+		final var savingsGoal = goalService.createSavingsGoal(accountUid, savingsGoalRequest);
+
+		if (null != savingsGoal && savingsGoal.getSavingsGoalUid() != null) {
+			log.info("Successfully completed Round Up Savings Goal Task Creation...");
+		} else {
+			throw new StarlingException("Failed Round Up Savings Goal Task Creation...");
+		}
+
+		return savingsGoal;
 	}
 
 	public static long calculateRoundUpSum(final FeedItems feedItems) {

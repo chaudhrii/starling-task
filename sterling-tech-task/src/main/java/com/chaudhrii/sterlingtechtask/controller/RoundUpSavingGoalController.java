@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chaudhrii.sterlingtechtask.api.RoundUpSavingsGoalRequest;
 import com.chaudhrii.sterlingtechtask.service.RoundUpSavingsGoalServiceImpl;
+import com.chaudhrii.sterlingtechtask.sterling.api.SavingsGoal;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,12 +29,12 @@ public class RoundUpSavingGoalController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE
 	)
-	public ResponseEntity<?> createRoundUpSavingsGoal(
+	public ResponseEntity<SavingsGoal> createRoundUpSavingsGoal(
 			@PathVariable(name = "accountUid") final String accountUid,
 			@RequestBody final RoundUpSavingsGoalRequest request
 	) {
 		log.info("Creating Round Up Savings Goal. accountUid: {}, request: {}", accountUid, request);
-		service.createRoundUpSavingsGoal(accountUid, request);
-		return ResponseEntity.ok(null); // probably should be 201
+		final var savingsGoal = service.createRoundUpSavingsGoal(accountUid, request);
+		return ResponseEntity.ok(savingsGoal); // probably should be 201
 	}
 }

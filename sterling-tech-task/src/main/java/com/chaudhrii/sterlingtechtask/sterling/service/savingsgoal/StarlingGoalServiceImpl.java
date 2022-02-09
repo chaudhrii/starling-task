@@ -1,10 +1,8 @@
 package com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class StarlingGoalServiceImpl implements StarlingGoalService {
-	private static final String FAILURE = "Failed to get Saving Goals by Account Holder from Starling";
 	private RestTemplate restTemplate;
 	private StarlingProperties starlingProperties;
 
@@ -48,8 +45,9 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 			}
 
 		} catch (final Exception e) {
-			log.error(FAILURE);
-			throw new StarlingException(FAILURE, e);
+			final var failure = "Failed to get All Savings Goals from Starling";
+			log.error(failure);
+			throw new StarlingException(failure, e);
 		}
 
 		log.debug("Retrieved {} Saving Goal Records", goals.getSavingsGoals().size());
@@ -74,8 +72,9 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 			}
 
 		} catch (final Exception e) {
-			log.error(FAILURE);
-			throw new StarlingException(FAILURE, e);
+			final var failure = "Failed to get Savings Goal from Starling";
+			log.error(failure);
+			throw new StarlingException(failure, e);
 		}
 
 		log.debug("Retrieved {} Saving Goal Record", goal);
@@ -97,11 +96,24 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 				goal = SavingsGoal.of(responseBody.getSavingsGoalUid());
 			}
 		} catch (final Exception e) {
-			log.error(FAILURE);
-			throw new StarlingException(FAILURE, e);
+			final var failure = "Failed to Create Savings Goal at Starling";
+			log.error(failure);
+			throw new StarlingException(failure, e);
 		}
 
 		log.debug("Created {} Saving Goal Record", goal);
 		return goal;
+	}
+
+	@Override
+	public void deleteSavingsGoal(final String accountUid, final String savingsGoalUid) {
+		try {
+			log.debug("Deleting Savings Goal {} at Starling...", savingsGoalUid);
+			restTemplate.delete(starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals/{savingsGoalUid}", accountUid, savingsGoalUid);
+		} catch (final Exception e) {
+			final var failure = "Failed to get delete Savings Goal at Starling";
+			log.error(failure);
+			throw new StarlingException(failure, e);
+		}
 	}
 }

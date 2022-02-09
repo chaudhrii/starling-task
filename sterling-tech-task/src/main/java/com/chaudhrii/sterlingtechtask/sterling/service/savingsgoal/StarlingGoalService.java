@@ -5,4 +5,5 @@ import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.request.Savin
 
 public interface StarlingGoalService {
 	SavingsGoal createSavingsGoal(final String accountUid, final SavingsGoalRequest request);
+	void deleteSavingsGoal(final String accountUid, final String savingsGoalUid);
 }
