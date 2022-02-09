@@ -1,6 +1,5 @@
 package com.chaudhrii.sterlingtechtask.service;
 
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -9,9 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.chaudhrii.sterlingtechtask.api.RoundUpSavingsGoalRequest;
+import com.chaudhrii.sterlingtechtask.sterling.api.CurrencyAndAmount;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItem;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItems;
 import com.chaudhrii.sterlingtechtask.sterling.service.account.StarlingAccountsService;
+import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.StarlingGoalService;
+import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.request.SavingsGoalRequest;
 import com.chaudhrii.sterlingtechtask.sterling.service.transaction.StarlingFeedService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,18 +23,26 @@ import lombok.extern.slf4j.Slf4j;
 public class RoundUpSavingsGoalServiceImpl {
 
 	private static final int DEFAULT_TIMESPAN_DAYS = 7;
-	private static final DecimalFormat F = new DecimalFormat("##.00");
+	//private static final DecimalFormat F = new DecimalFormat("##.00");
 
 	private StarlingAccountsService accountsService;
 	private StarlingFeedService feedService;
+	private StarlingGoalService goalService;
 
-	public RoundUpSavingsGoalServiceImpl(final StarlingAccountsService accountsService, final StarlingFeedService feedService) {
+	public RoundUpSavingsGoalServiceImpl(final StarlingAccountsService accountsService, final StarlingFeedService feedService, final StarlingGoalService goalService) {
 		this.accountsService = accountsService;
 		this.feedService = feedService;
+		this.goalService = goalService;
 	}
 
 	public void createRoundUpSavingsGoal(final String accountUid, final RoundUpSavingsGoalRequest request) {
-		validate(accountUid, request);
+		final var balance = accountsService.getAccountBalance(accountUid);
+		if (null == balance) {
+			throw new IllegalArgumentException("Account does not exist!");
+		}
+
+		validate(request);
+		final var currency = balance.getAmount().getCurrency();
 
 		final var fromTime = request.getMinTransactionTimestamp();
 		final var toTime = calculateToTime(request, fromTime);
@@ -41,38 +51,41 @@ public class RoundUpSavingsGoalServiceImpl {
 
 		// TODO: check goal doesn't already exist
 
-		final var feedItems= getOutgoingsInPeriod(accountUid, fromTime, toTime);
+		final var feedItems= getOutgoingsInPeriod(accountUid, currency, fromTime, toTime);
 		log.debug("Considering {} Outgoing Feed Items", feedItems.getFeedItems().size());
 
 		// Round up sum
 		final var roundUpSum = calculateRoundUpSum(feedItems);
 		log.debug("Round up sum {}", roundUpSum);
 
-		// Round to nearest 2dec pl before creating goal
+		// create savings goal
+		final var savingsGoalRequest = SavingsGoalRequest.of(request.getSavingsGoalName(), currency, CurrencyAndAmount.of(currency, roundUpSum));
+		goalService.createSavingsGoal(accountUid, savingsGoalRequest);
 	}
 
 	public static long calculateRoundUpSum(final FeedItems feedItems) {
 		var sumDecimal = 0d;
 		for (final FeedItem feedItem : feedItems.getFeedItems()) {
 			final var decimalAmount  = feedItem.getAmount().getMinorUnits()/100d;
+			final var roundUp = 1d - (decimalAmount % 1d);
 
-			final var subAmount = decimalAmount % 1d;
-			if (decimalAmount != 1d) {
-				final var roundUp = 1d - subAmount;
-				log.debug("Round Up {} Amount: {}", decimalAmount, roundUp);
-				sumDecimal += roundUp;
-			}
+			log.debug("Round Up {} Amount: {}", decimalAmount, roundUp);
+			sumDecimal += roundUp;
+
 		}
 
-		var suml = Math.round(sumDecimal * 100d); // round sub currency
-		log.info("Total Round Up Amount: {}", suml);
+		final var roundUpSum = Math.round(sumDecimal * 100d); // round sub currency, so we don't get .xxxxx vals
+		log.info("Total Round Up Amount: {}", roundUpSum);
 
-		return suml;
+		return roundUpSum;
 	}
 
-	private FeedItems getOutgoingsInPeriod(final String accountUid, final Instant fromTime, final Instant toTime) {
+	private FeedItems getOutgoingsInPeriod(final String accountUid, final String currency, final Instant fromTime, final Instant toTime) {
 		final var feedItems = feedService.getOutgoingFeedItemsInPeriod(accountUid, fromTime, toTime);
-		feedItems.setFeedItems(feedItems.getFeedItems().stream().filter(f -> f.getDirection().equals("OUT")).collect(Collectors.toList()));
+		feedItems.setFeedItems(feedItems.getFeedItems()
+				.stream()
+				.filter(f -> f.getDirection().equals("OUT") && f.getAmount().getCurrency().equals(currency))
+				.collect(Collectors.toList()));
 		return feedItems;
 	}
 
@@ -80,12 +93,7 @@ public class RoundUpSavingsGoalServiceImpl {
 		return request.getMaxTransactionTimestamp() != null ? request.getMaxTransactionTimestamp() : fromTime.plus(Period.ofDays(DEFAULT_TIMESPAN_DAYS));
 	}
 
-	private void validate(final String accountUid, final RoundUpSavingsGoalRequest request) {
-		final var balance = accountsService.getAccountBalance(accountUid);
-		if (null == balance) {
-			throw new IllegalArgumentException("Account does not exist!");
-		}
-
+	private void validate(final RoundUpSavingsGoalRequest request) {
 		if (null == request.getMinTransactionTimestamp()) {
 			throw new IllegalArgumentException("From Time is Required");
 		}
