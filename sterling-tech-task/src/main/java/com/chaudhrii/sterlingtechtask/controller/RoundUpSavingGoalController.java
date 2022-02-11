@@ -2,7 +2,6 @@ package com.chaudhrii.sterlingtechtask.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 public class RoundUpSavingGoalController {
-
-	private RoundUpSavingsGoalServiceImpl service;
+	private final RoundUpSavingsGoalServiceImpl service;
 
 	public RoundUpSavingGoalController(final RoundUpSavingsGoalServiceImpl service) {
 		this.service = service;
@@ -33,8 +31,10 @@ public class RoundUpSavingGoalController {
 			@PathVariable(name = "accountUid") final String accountUid,
 			@RequestBody final RoundUpSavingsGoalRequest request
 	) {
+		SavingsGoal savingsGoal;
 		log.info("Creating Round Up Savings Goal. accountUid: {}, request: {}", accountUid, request);
-		final var savingsGoal = service.createRoundUpSavingsGoal(accountUid, request);
+		savingsGoal = service.createRoundUpSavingsGoal(accountUid, request);
+
 		return ResponseEntity.ok(savingsGoal); // probably should be 201
 	}
 }

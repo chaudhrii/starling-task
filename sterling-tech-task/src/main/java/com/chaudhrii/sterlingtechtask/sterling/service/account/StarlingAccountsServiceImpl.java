@@ -2,6 +2,7 @@ package com.chaudhrii.sterlingtechtask.sterling.service.account;
 
 import java.util.Collections;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class StarlingAccountsServiceImpl implements StarlingAccountsService {
-	private static final String FAILURE = "Failed to get Accounts by Account Holder from Starling";
-
 	private RestTemplate restTemplate;
 	private StarlingProperties starlingProperties;
 
@@ -27,51 +26,35 @@ public class StarlingAccountsServiceImpl implements StarlingAccountsService {
 
 	@Override
 	public Accounts getAllAccounts() {
-		var accounts = new Accounts(Collections.emptyList());
+		final var intent = "Retrieving All Account Records from Starling";
+		log.debug(intent);
+		final var response =
+				restTemplate.getForEntity(
+						starlingProperties.getStarlingBaseUrl() + "/api/v2/accounts",
+						Accounts.class);
+		log.debug("Response: {}", response);
 
-		try {
-			log.debug("Getting All Account Records from Starling...");
-			final var response =
-					restTemplate.getForEntity(
-							starlingProperties.getStarlingBaseUrl() + "/api/v2/accounts",
-							Accounts.class);
-			final var responseBody = response.getBody();
-			log.debug("Response: {}", response);
-
-			if (null != responseBody) {
-				accounts = responseBody;
-			}
-
-		} catch (final Exception e) {
-			log.error(FAILURE);
-			throw new StarlingException(FAILURE, e);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new StarlingException("Failed in " + intent);
 		}
 
-		log.debug("Retrieved {} Account Records", accounts.getAccounts().size());
-		return accounts;
+		return response.getBody();
 	}
 
 	@Override
 	public Balance getAccountBalance(final String accountUid) {
-		Balance balance = null;
-		try {
-			log.debug("Getting Account Balance for account: {} from Starling...", accountUid);
-			final var response =
-					restTemplate.getForEntity(
-							starlingProperties.getStarlingBaseUrl() + "/api/v2/accounts/{accountUid}/balance",
-							Balance.class,
-							accountUid);
-			final var responseBody = response.getBody();
-			log.debug("Response: {}", response);
+		final var intent = String.format("Retrieving Account Balance for account:%s from Starling", accountUid);
+		log.debug(intent);
+		final var response =
+				restTemplate.getForEntity(
+						starlingProperties.getStarlingBaseUrl() + "/api/v2/accounts/{accountUid}/balance",
+						Balance.class,
+						accountUid);
+		log.debug("Response: {}", response);
 
-			if (null != responseBody) {
-				balance = responseBody;
-			}
-
-		} catch (final Exception e) {
-			log.error(FAILURE);
-			throw new StarlingException(FAILURE, e);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new StarlingException("Failed in " + intent);
 		}
-		return balance;
+		return response.getBody();
 	}
 }

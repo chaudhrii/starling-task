@@ -40,7 +40,7 @@ class RoundUpSavingGoalIntegrationTest {
 		goalService.deleteSavingsGoal(ACCOUNT_UID, savingsGoal.getBody().getSavingsGoalUid());
 	}
 
-	@Test
+
 	void convenienceCleanUp() throws InterruptedException {
 		final var savingsGoals = List.of(
 				"a80ff46a-152d-4a40-8a8f-6ac61a194199",

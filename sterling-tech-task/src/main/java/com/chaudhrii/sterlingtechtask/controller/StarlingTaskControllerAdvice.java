@@ -13,12 +13,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.chaudhrii.sterlingtechtask.core.exception.StarlingException;
 
+import lombok.extern.slf4j.Slf4j;
+
 @ControllerAdvice
+@Slf4j
 public class StarlingTaskControllerAdvice extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> handleBadRequest(IllegalArgumentException ex, WebRequest request) {
-
+		log.error("Error: {}", ex.getMessage());
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("timestamp", LocalDateTime.now());
 		body.put("message", ex.getMessage());
@@ -27,8 +30,8 @@ public class StarlingTaskControllerAdvice extends ResponseEntityExceptionHandler
 	}
 
 	@ExceptionHandler(StarlingException.class)
-	public ResponseEntity<Object> handleInternalError(StarlingException ex, WebRequest request) {
-
+	public ResponseEntity<Object> handleStarlingException(StarlingException ex, WebRequest request) {
+		log.error("Error: {}", ex.getMessage());
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("timestamp", LocalDateTime.now());
 		body.put("message", ex.getMessage());

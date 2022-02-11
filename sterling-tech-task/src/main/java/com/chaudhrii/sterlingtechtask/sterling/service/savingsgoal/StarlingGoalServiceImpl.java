@@ -1,8 +1,5 @@
 package com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal;
 
-import java.util.Collections;
-
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,92 +25,61 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 	}
 
 	public SavingsGoalList getSavingsGoals(final String accountUid) {
-		var goals = new SavingsGoalList(Collections.emptyList());
+		final var intent = "Getting All Savings Goal Records from Starling";
+		log.debug(intent);
 
-		try {
-			log.debug("Getting All Savings Goal Records from Starling...");
-			final var response =
-					restTemplate.getForEntity(
-							starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals",
-							SavingsGoalList.class,
-							accountUid);
-			final var responseBody = response.getBody();
-			log.debug("Response: {}", response);
+		final var response =
+				restTemplate.getForEntity(
+						starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals",
+						SavingsGoalList.class,
+						accountUid);
+		log.debug("Response: {}", response);
 
-			if (null != responseBody) {
-				goals = responseBody;
-			}
-
-		} catch (final Exception e) {
-			final var failure = "Failed to get All Savings Goals from Starling";
-			log.error(failure);
-			throw new StarlingException(failure, e);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new StarlingException("Failed in " + intent);
 		}
 
-		log.debug("Retrieved {} Saving Goal Records", goals.getSavingsGoals().size());
-		return goals;
+		return response.getBody();
 	}
 
 	public SavingsGoal getSavingsGoal(final String accountUid, final String savingsGoalUid) {
-		SavingsGoal goal = null;
+		final var intent = String.format("Getting Savings Goal from Starling for accountUid:%s and savingsGoalUid:%s", accountUid, savingsGoalUid);
+		log.debug(intent);
 
-		try {
-			log.debug("Getting Savings Goal from Starling...");
-			final var response =
-					restTemplate.getForEntity(
-							starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals/{savingsGoalUid}",
-							SavingsGoal.class,
-							accountUid, savingsGoalUid);
-			final var responseBody = response.getBody();
-			log.debug("Response: {}", response);
+		final var response =
+				restTemplate.getForEntity(
+						starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals/{savingsGoalUid}",
+						SavingsGoal.class,
+						accountUid, savingsGoalUid);
+		log.debug("Response: {}", response);
 
-			if (null != responseBody) {
-				goal = responseBody;
-			}
-
-		} catch (final Exception e) {
-			final var failure = "Failed to get Savings Goal from Starling";
-			log.error(failure);
-			throw new StarlingException(failure, e);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new StarlingException("Failed in " + intent);
 		}
 
-		log.debug("Retrieved {} Saving Goal Record", goal);
-		return goal;
+		return response.getBody();
 	}
 
 	@Override
 	public SavingsGoal createSavingsGoal(final String accountUid, final SavingsGoalRequest request) {
-		SavingsGoal goal = null;
-		try {
-			log.debug("Creating Savings Goal at Starling...");
-			final var requestEntity = RequestEntity.put(starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals", accountUid)
-					.body(request);
-			final var response = restTemplate.exchange(requestEntity, SavingsGoalResponse.class);
-			final var responseBody = response.getBody();
-			log.debug("Response: {}", response);
+		final var intent = String.format("Creating Savings Goal at Starling for accountUid:%s and Savings Goal Name:%s", accountUid, request.getName());
+		log.debug(intent);
+		final var requestEntity = RequestEntity.put(starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals", accountUid)
+				.body(request);
+		final var response = restTemplate.exchange(requestEntity, SavingsGoalResponse.class);
+		log.debug("Response: {}", response);
 
-			if (null != responseBody) {
-				goal = SavingsGoal.of(responseBody.getSavingsGoalUid());
-			}
-		} catch (final Exception e) {
-			final var failure = "Failed to Create Savings Goal at Starling";
-			log.error(failure);
-			throw new StarlingException(failure, e);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new StarlingException("Failed in " + intent);
 		}
 
-		log.debug("Created {} Saving Goal Record", goal);
-		return goal;
+		return SavingsGoal.of(response.getBody().getSavingsGoalUid());
 	}
 
 	@Override
 	public void deleteSavingsGoal(final String accountUid, final String savingsGoalUid) {
-		try {
-			log.debug("Deleting Savings Goal {} at Starling...", savingsGoalUid);
-			restTemplate.delete(starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals/{savingsGoalUid}", accountUid, savingsGoalUid);
-		} catch (final Exception e) {
-			final var failure = "Failed to get delete Savings Goal at Starling";
-			log.error(failure);
-			throw new StarlingException(failure, e);
-		}
+		final var intent = String.format("Deleting Savings Goal accountUid:%s, savingsGoalUid:%s at Starling...", accountUid, savingsGoalUid);
+		log.debug(intent);
+		restTemplate.delete(starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals/{savingsGoalUid}", accountUid, savingsGoalUid);
 	}
 }

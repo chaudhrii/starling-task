@@ -11,6 +11,7 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "starling")
 @Data
 public class StarlingProperties {
+	private int defaultRoundUpPeriod;
 	private String starlingBaseUrl;
 	private String bearerToken;
 }

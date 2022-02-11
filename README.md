@@ -27,6 +27,7 @@ future adventures.
 - Rounding up only considers
   - 'Spending' transactions i.e. *OUTgoing*
   - Currencies that match the currency of the Account's 'account' balance
+- No checks on existing savings goal with same name necessary
 
 ## How to run
 ### Start Spring Boot Application
