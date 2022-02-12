@@ -1,4 +1,4 @@
-package com.chaudhrii.sterlingtechtask.controller;
+package com.chaudhrii.sterlingtechtask.controller.exception;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -22,7 +22,7 @@ public class StarlingTaskControllerAdvice extends ResponseEntityExceptionHandler
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> handleBadRequest(IllegalArgumentException ex, WebRequest request) {
 		log.error("Error: {}", ex.getMessage());
-		Map<String, Object> body = new LinkedHashMap<>();
+		final Map<String, Object> body = new LinkedHashMap<>();
 		body.put("timestamp", LocalDateTime.now());
 		body.put("message", ex.getMessage());
 
@@ -32,7 +32,7 @@ public class StarlingTaskControllerAdvice extends ResponseEntityExceptionHandler
 	@ExceptionHandler(StarlingException.class)
 	public ResponseEntity<Object> handleStarlingException(StarlingException ex, WebRequest request) {
 		log.error("Error: {}", ex.getMessage());
-		Map<String, Object> body = new LinkedHashMap<>();
+		final Map<String, Object> body = new LinkedHashMap<>();
 		body.put("timestamp", LocalDateTime.now());
 		body.put("message", ex.getMessage());
 

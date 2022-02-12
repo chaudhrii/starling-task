@@ -17,7 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StarlingGoalServiceImpl implements StarlingGoalService {
 	private static final String RESPONSE_LOG = "Response: {}";
-	private static final String FAILURE_LOG = "Failed in: ";
+	private static final String FAILURE_LOG = "Failed in ";
+
 	private RestTemplate restTemplate;
 	private StarlingProperties starlingProperties;
 

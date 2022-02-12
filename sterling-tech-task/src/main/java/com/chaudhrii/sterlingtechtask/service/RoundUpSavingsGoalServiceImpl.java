@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.chaudhrii.sterlingtechtask.api.RoundUpSavingsGoalRequest;
 import com.chaudhrii.sterlingtechtask.core.config.StarlingProperties;
-import com.chaudhrii.sterlingtechtask.core.exception.StarlingException;
 import com.chaudhrii.sterlingtechtask.core.filter.FeedItemsFilter;
 import com.chaudhrii.sterlingtechtask.sterling.api.CurrencyAndAmount;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItem;
@@ -53,47 +52,43 @@ public class RoundUpSavingsGoalServiceImpl {
 		log.debug("Considered period in days: {}", calculateTimeDifferenceInDays(fromTime, toTime));
 
 		final var feedItems= getOutgoingsFeedItemsInPeriod(accountUid, FeedItemsFilter.of(accountCurrency, fromTime, toTime));
-		log.debug("Considering {} Outgoing feed items", feedItems.getFeedItemsData().size());
+		log.debug("Considering {} Outgoing feed items", feedItems.getFeedItems().size());
 
 		// Round up sum
 		final var roundUpSum = calculateRoundUpSum(feedItems);
 		log.debug("Round Up sum {}", roundUpSum);
 
-		// If Sum is 0 - no point creating a goal? Not concerning with this for now...
+		if (roundUpSum == 0L) {
+			log.info("Round up sum is zero. No Rule Created");
+			return null;
+		}
 
-		// create savings goal
+		// Create savings goal
 		final var savingsGoalRequest = SavingsGoalRequest.of(request.getSavingsGoalName(), accountCurrency, CurrencyAndAmount.of(accountCurrency, roundUpSum));
 		final var savingsGoal = goalService.createSavingsGoal(accountUid, savingsGoalRequest);
 
-		if (null != savingsGoal && savingsGoal.getSavingsGoalUid() != null) {
-			log.info("Successfully completed Round Up Savings Goal Task Creation...");
-		} else {
-			throw new StarlingException("Failed Round Up Savings Goal Task Creation...");
-		}
-
+		log.info("Successfully Created Round Up Savings Goal with Id:{}...", savingsGoal.getSavingsGoalUid());
 		return savingsGoal;
 	}
 
 	public static long calculateRoundUpSum(final FeedItems feedItems) {
 		var sumDecimal = 0d;
-		for (final FeedItem feedItem : feedItems.getFeedItemsData()) {
+		for (final FeedItem feedItem : feedItems.getFeedItems()) {
 			final var decimalAmount  = feedItem.getAmount().getMinorUnits()/100d;
 			final var roundUp = 1d - (decimalAmount % 1d);
 
 			log.debug("Round Up {} Amount: {}", decimalAmount, roundUp);
 			sumDecimal += roundUp;
-
 		}
 
 		final var roundUpSum = Math.round(sumDecimal * 100d); // round sub currency, so we don't get .xxxxx vals
 		log.info("Total Round Up Amount: {}", roundUpSum);
-
 		return roundUpSum;
 	}
 
 	private FeedItems getOutgoingsFeedItemsInPeriod(final String accountUid, final FeedItemsFilter feedItemsFilter) {
 		final var feedItems = feedService.getOutgoingFeedItemsInPeriod(accountUid, feedItemsFilter);
-		feedItems.setFeedItemsData(feedItems.getFeedItemsData()
+		feedItems.setFeedItems(feedItems.getFeedItems()
 				.stream()
 				.filter(f -> f.getDirection().equals("OUT") && f.getAmount().getCurrency().equals(feedItemsFilter.getCurrency()))
 				.collect(Collectors.toList()));

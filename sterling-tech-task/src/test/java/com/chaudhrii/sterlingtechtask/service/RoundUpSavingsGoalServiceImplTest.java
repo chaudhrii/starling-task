@@ -27,4 +27,34 @@ class RoundUpSavingsGoalServiceImplTest {
 		// Then
 		assertEquals(158d, roundUpSum);
 	}
+
+	@Test
+	void whenRoundUp_andUnder10Amounts() {
+		// Given
+		final var feedItem1 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 1));
+		final var feedItem2 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 0));
+		final var feedItem3 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 1));
+		final var feedItems = new FeedItems(List.of(feedItem1, feedItem2, feedItem3));
+
+		// When
+		final var roundUpSum = RoundUpSavingsGoalServiceImpl.calculateRoundUpSum(feedItems);
+
+		// Then
+		assertEquals(298d, roundUpSum);
+	}
+
+	@Test
+	void whenRoundUp_andUnder0Amounts() {
+		// Given
+		final var feedItem1 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 0));
+		final var feedItem2 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 0));
+		final var feedItem3 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 0));
+		final var feedItems = new FeedItems(List.of(feedItem1, feedItem2, feedItem3));
+
+		// When
+		final var roundUpSum = RoundUpSavingsGoalServiceImpl.calculateRoundUpSum(feedItems);
+
+		// Then
+		assertEquals(300d, roundUpSum);
+	}
 }

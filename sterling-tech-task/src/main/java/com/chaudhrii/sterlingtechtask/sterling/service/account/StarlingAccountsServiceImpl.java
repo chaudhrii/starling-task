@@ -1,8 +1,5 @@
 package com.chaudhrii.sterlingtechtask.sterling.service.account;
 
-import java.util.Collections;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

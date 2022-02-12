@@ -1,12 +1,7 @@
 package com.chaudhrii.sterlingtechtask.sterling.service.account;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -53,7 +48,7 @@ class StarlingAccountsServiceImplTest {
 
 		// Then
 		assertNotNull(accounts);
-		assertEquals(1, accounts.getAccountData().size());
+		assertEquals(1, accounts.getAccounts().size());
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package com.chaudhrii.sterlingtechtask.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,13 +28,17 @@ public class RoundUpSavingGoalController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE
 	)
-	public ResponseEntity<SavingsGoal> createRoundUpSavingsGoal(
+	public ResponseEntity<SavingsGoal> createRoundUpSavingsGoalOnAccount(
 			@PathVariable(name = "accountUid") final String accountUid,
 			@RequestBody final RoundUpSavingsGoalRequest request
 	) {
 		SavingsGoal savingsGoal;
 		log.info("Creating Round Up Savings Goal. accountUid: {}, request: {}", accountUid, request);
 		savingsGoal = service.createRoundUpSavingsGoal(accountUid, request);
+
+		if (null == savingsGoal) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 
 		return ResponseEntity.ok(savingsGoal); // probably should be 201
 	}

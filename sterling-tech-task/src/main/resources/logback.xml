@@ -9,7 +9,7 @@
 		</layout>
 	</appender>
 
-	<logger name="com.chaudhrii" level="debug" additivity="false">
+	<logger name="com.chaudhrii" level="info" additivity="false">
 		<appender-ref ref="CONSOLE"/>
 	</logger>
 

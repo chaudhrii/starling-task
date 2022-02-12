@@ -1,12 +1,7 @@
 package com.chaudhrii.sterlingtechtask.sterling.service.transaction;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -43,7 +38,7 @@ class StarlingFeedServiceImplTest {
 	private StarlingFeedServiceImpl service;
 
 	@Test
-	void testGetAllFeedItems_andFeedItemsAreReturned() {
+	void whenGetAllFeedItems_thenFeedItemsAreReturned() {
 		// Given
 		final var response = new ResponseEntity<>(new FeedItems(List.of(new FeedItem())), HttpStatus.OK);
 		when(restTemplate.getForEntity(
@@ -59,11 +54,11 @@ class StarlingFeedServiceImplTest {
 
 		// Then
 		assertNotNull(feedItems);
-		assertEquals(1, feedItems.getFeedItemsData().size());
+		assertEquals(1, feedItems.getFeedItems().size());
 	}
 
 	@Test
-	void testGetAllFeedItems_NoFeedItemsFound() {
+	void whenGetAllFeedItems_andNoFeedItemsFound() {
 		// Given
 		final var error = new ErrorResponse();
 		final var response = new ResponseEntity<>((Object) error, HttpStatus.NOT_FOUND);
