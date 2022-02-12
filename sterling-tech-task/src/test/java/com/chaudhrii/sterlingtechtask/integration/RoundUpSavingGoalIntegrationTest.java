@@ -29,7 +29,7 @@ class RoundUpSavingGoalIntegrationTest {
 
 	private static final String ACCOUNT_UID = "1db3f775-36e3-4e9f-bc9b-582cde60017f";
 
-	@Test
+	//@Test
 	void createRoundUpSavingsGoal() throws InterruptedException {
 
 		final var request = new RoundUpSavingsGoalRequest();

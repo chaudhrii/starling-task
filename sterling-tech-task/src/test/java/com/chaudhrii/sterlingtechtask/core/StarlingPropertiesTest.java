@@ -16,6 +16,6 @@ class StarlingPropertiesTest {
 
 	@Test
 	void canReadBaseUrl() {
-		assertEquals("https://api-sandbox.starlingbank-test.com", starlingProperties.getStarlingBaseUrl());
+		assertEquals("https://api-sandbox.starlingbank.com", starlingProperties.getStarlingBaseUrl());
 	}
 }

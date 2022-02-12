@@ -76,6 +76,11 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 		return SavingsGoal.of(response.getBody().getSavingsGoalUid());
 	}
 
+	/**
+	 * Notes: Would consider using restTemplate.exchange() with an appropriate message.
+	 *
+	 * Since delete is not a requirement of the exercise specification, I am taking a liberty here.
+	 */
 	@Override
 	public void deleteSavingsGoal(final String accountUid, final String savingsGoalUid) {
 		final var intent = String.format("Deleting Savings Goal accountUid:%s, savingsGoalUid:%s at Starling...", accountUid, savingsGoalUid);

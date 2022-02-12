@@ -14,7 +14,7 @@ class RoundUpSavingsGoalServiceImplTest {
 	public static final String GBP = "GBP";
 
 	@Test
-	void testRoundUp() {
+	void whenRoundUp_andFeedItemsAreAsStarlingScenario() {
 		// Given
 		final var feedItem1 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 435));
 		final var feedItem2 = FeedItem.outgoing(CurrencyAndAmount.of(GBP, 520));
