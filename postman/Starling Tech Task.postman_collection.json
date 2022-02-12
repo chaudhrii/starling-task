@@ -108,7 +108,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v2/feed/account/{{accountUid}}/category/{{categoryUid}}/transactions-between?minTransactionTimestamp=2020-06-01T12:34:56.000Z&maxTransactionTimestamp=2022-07-01T12:34:56.000Z",
+							"raw": "{{BASE_URL}}/api/v2/feed/account/{{accountUid}}/category/{{categoryUid}}/transactions-between?minTransactionTimestamp={{minTransactionTimestamp}}&maxTransactionTimestamp={{maxTransactionTimestamp}}",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -125,11 +125,11 @@
 							"query": [
 								{
 									"key": "minTransactionTimestamp",
-									"value": "2020-06-01T12:34:56.000Z"
+									"value": "{{minTransactionTimestamp}}"
 								},
 								{
 									"key": "maxTransactionTimestamp",
-									"value": "2022-07-01T12:34:56.000Z"
+									"value": "{{maxTransactionTimestamp}}"
 								}
 							]
 						}
