@@ -1,6 +1,5 @@
 package com.chaudhrii.sterlingtechtask.sterling.api;
 
-import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.request.SavingsGoalRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;

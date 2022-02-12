@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-import com.chaudhrii.sterlingtechtask.sterling.service.StarlingErrorHandler;
+import com.chaudhrii.sterlingtechtask.sterling.api.error.StarlingErrorHandler;
 
 @Configuration
 public class StarlingRestTemplateConfig {

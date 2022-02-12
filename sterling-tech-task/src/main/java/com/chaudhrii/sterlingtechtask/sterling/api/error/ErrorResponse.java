@@ -1,4 +1,4 @@
-package com.chaudhrii.sterlingtechtask.sterling.service;
+package com.chaudhrii.sterlingtechtask.sterling.api.error;
 
 import lombok.Data;
 

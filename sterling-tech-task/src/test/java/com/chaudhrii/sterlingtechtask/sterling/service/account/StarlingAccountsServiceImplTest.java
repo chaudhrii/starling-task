@@ -26,7 +26,7 @@ import com.chaudhrii.sterlingtechtask.sterling.api.Account;
 import com.chaudhrii.sterlingtechtask.sterling.api.Accounts;
 import com.chaudhrii.sterlingtechtask.sterling.api.Balance;
 import com.chaudhrii.sterlingtechtask.sterling.api.SignedCurrencyAndAmount;
-import com.chaudhrii.sterlingtechtask.sterling.service.ErrorResponse;
+import com.chaudhrii.sterlingtechtask.sterling.api.error.ErrorResponse;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -53,7 +53,7 @@ class StarlingAccountsServiceImplTest {
 
 		// Then
 		assertNotNull(accounts);
-		assertEquals(1, accounts.getAccounts().size());
+		assertEquals(1, accounts.getAccountData().size());
 	}
 
 	@Test

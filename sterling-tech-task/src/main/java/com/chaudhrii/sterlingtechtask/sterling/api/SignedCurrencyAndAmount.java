@@ -2,6 +2,9 @@ package com.chaudhrii.sterlingtechtask.sterling.api;
 
 import lombok.Data;
 
+/**
+ * Probably don't need this and {@link CurrencyAndAmount} but followed the API documentation in this regard
+ */
 @Data
 public class SignedCurrencyAndAmount {
 	private String currency;

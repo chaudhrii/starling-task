@@ -25,7 +25,7 @@ import com.chaudhrii.sterlingtechtask.core.exception.StarlingException;
 import com.chaudhrii.sterlingtechtask.sterling.api.CurrencyAndAmount;
 import com.chaudhrii.sterlingtechtask.sterling.api.SavingsGoal;
 import com.chaudhrii.sterlingtechtask.sterling.api.SavingsGoalList;
-import com.chaudhrii.sterlingtechtask.sterling.service.ErrorResponse;
+import com.chaudhrii.sterlingtechtask.sterling.api.error.ErrorResponse;
 import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.request.SavingsGoalRequest;
 import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.response.SavingsGoalResponse;
 

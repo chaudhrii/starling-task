@@ -25,7 +25,7 @@ import com.chaudhrii.sterlingtechtask.core.exception.StarlingException;
 import com.chaudhrii.sterlingtechtask.core.filter.FeedItemsFilter;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItem;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItems;
-import com.chaudhrii.sterlingtechtask.sterling.service.ErrorResponse;
+import com.chaudhrii.sterlingtechtask.sterling.api.error.ErrorResponse;
 
 @ExtendWith(MockitoExtension.class)
 class StarlingFeedServiceImplTest {
@@ -59,7 +59,7 @@ class StarlingFeedServiceImplTest {
 
 		// Then
 		assertNotNull(feedItems);
-		assertEquals(1, feedItems.getFeedItems().size());
+		assertEquals(1, feedItems.getFeedItemsData().size());
 	}
 
 	@Test

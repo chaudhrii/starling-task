@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class Accounts {
-	private List<Account> accounts;
+	private List<Account> accountData;
 }

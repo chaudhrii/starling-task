@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class StarlingGoalServiceImpl implements StarlingGoalService {
+	private static final String RESPONSE_LOG = "Response: {}";
+	private static final String FAILURE_LOG = "Failed in: ";
 	private RestTemplate restTemplate;
 	private StarlingProperties starlingProperties;
 
@@ -33,10 +35,10 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 						starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals",
 						SavingsGoalList.class,
 						accountUid);
-		log.debug("Response: {}", response);
+		log.debug(RESPONSE_LOG, response);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new StarlingException("Failed in " + intent);
+			throw new StarlingException(FAILURE_LOG + intent);
 		}
 
 		return response.getBody();
@@ -51,10 +53,10 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 						starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals/{savingsGoalUid}",
 						SavingsGoal.class,
 						accountUid, savingsGoalUid);
-		log.debug("Response: {}", response);
+		log.debug(RESPONSE_LOG, response);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new StarlingException("Failed in " + intent);
+			throw new StarlingException(FAILURE_LOG + intent);
 		}
 
 		return response.getBody();
@@ -67,12 +69,14 @@ public class StarlingGoalServiceImpl implements StarlingGoalService {
 		final var requestEntity = RequestEntity.put(starlingProperties.getStarlingBaseUrl() + "/api/v2/account/{accountUid}/savings-goals", accountUid)
 				.body(request);
 		final var response = restTemplate.exchange(requestEntity, SavingsGoalResponse.class);
-		log.debug("Response: {}", response);
+		log.debug(RESPONSE_LOG, response);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new StarlingException("Failed in " + intent);
+			throw new StarlingException(FAILURE_LOG + intent);
 		}
 
+		// If Sonar complains, I believe we wouldn't get this far as the exception above would have thrown out already.
+		// Not suppressing the warning as it could mask a genuine case!
 		return SavingsGoal.of(response.getBody().getSavingsGoalUid());
 	}
 

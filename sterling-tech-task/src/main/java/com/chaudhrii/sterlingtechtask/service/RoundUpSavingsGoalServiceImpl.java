@@ -53,13 +53,13 @@ public class RoundUpSavingsGoalServiceImpl {
 		log.debug("Considered period in days: {}", calculateTimeDifferenceInDays(fromTime, toTime));
 
 		final var feedItems= getOutgoingsFeedItemsInPeriod(accountUid, FeedItemsFilter.of(accountCurrency, fromTime, toTime));
-		log.debug("Considering {} Outgoing feed items", feedItems.getFeedItems().size());
+		log.debug("Considering {} Outgoing feed items", feedItems.getFeedItemsData().size());
 
 		// Round up sum
 		final var roundUpSum = calculateRoundUpSum(feedItems);
 		log.debug("Round Up sum {}", roundUpSum);
 
-		// TODO : If Sum is 0 - no point creating a goal?
+		// If Sum is 0 - no point creating a goal? Not concerning with this for now...
 
 		// create savings goal
 		final var savingsGoalRequest = SavingsGoalRequest.of(request.getSavingsGoalName(), accountCurrency, CurrencyAndAmount.of(accountCurrency, roundUpSum));
@@ -76,7 +76,7 @@ public class RoundUpSavingsGoalServiceImpl {
 
 	public static long calculateRoundUpSum(final FeedItems feedItems) {
 		var sumDecimal = 0d;
-		for (final FeedItem feedItem : feedItems.getFeedItems()) {
+		for (final FeedItem feedItem : feedItems.getFeedItemsData()) {
 			final var decimalAmount  = feedItem.getAmount().getMinorUnits()/100d;
 			final var roundUp = 1d - (decimalAmount % 1d);
 
@@ -93,7 +93,7 @@ public class RoundUpSavingsGoalServiceImpl {
 
 	private FeedItems getOutgoingsFeedItemsInPeriod(final String accountUid, final FeedItemsFilter feedItemsFilter) {
 		final var feedItems = feedService.getOutgoingFeedItemsInPeriod(accountUid, feedItemsFilter);
-		feedItems.setFeedItems(feedItems.getFeedItems()
+		feedItems.setFeedItemsData(feedItems.getFeedItemsData()
 				.stream()
 				.filter(f -> f.getDirection().equals("OUT") && f.getAmount().getCurrency().equals(feedItemsFilter.getCurrency()))
 				.collect(Collectors.toList()));

@@ -6,7 +6,6 @@ import org.springframework.web.client.RestTemplate;
 import com.chaudhrii.sterlingtechtask.core.config.StarlingProperties;
 import com.chaudhrii.sterlingtechtask.core.exception.StarlingException;
 import com.chaudhrii.sterlingtechtask.core.filter.FeedItemsFilter;
-import com.chaudhrii.sterlingtechtask.sterling.api.FeedItem;
 import com.chaudhrii.sterlingtechtask.sterling.api.FeedItems;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class StarlingFeedServiceImpl implements StarlingFeedService {
-	private static final String FAILURE = "Failed to get Feed Items by Account from Starling";
-
 	private RestTemplate restTemplate;
 	private StarlingProperties starlingProperties;
 

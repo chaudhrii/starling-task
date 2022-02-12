@@ -1,5 +1,7 @@
 package com.chaudhrii.sterlingtechtask.integration;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -15,7 +17,7 @@ import com.chaudhrii.sterlingtechtask.sterling.service.savingsgoal.StarlingGoalS
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * TODO IC MIGHT REMOVE
+ * Notes: This is just a smoke test that helps me speed testing up so I don't have to use Postman manually do it.
  */
 @SpringBootTest
 @Slf4j
@@ -29,18 +31,21 @@ class RoundUpSavingGoalIntegrationTest {
 
 	private static final String ACCOUNT_UID = "1db3f775-36e3-4e9f-bc9b-582cde60017f";
 
-	//@Test
-	void createRoundUpSavingsGoal() throws InterruptedException {
-
-		final var request = new RoundUpSavingsGoalRequest();
-		request.setSavingsGoalName("IC Savings Goal");
-		request.setMinTransactionTimestamp(LocalDateTime.of(2022, 2, 5, 0, 0).toInstant(ZoneOffset.UTC));
-		final var savingsGoal = controller.createRoundUpSavingsGoal(ACCOUNT_UID, request);
-		Thread.sleep(2000);
-		goalService.deleteSavingsGoal(ACCOUNT_UID, savingsGoal.getBody().getSavingsGoalUid());
+	@Test
+	@SuppressWarnings("squid:S2925")
+	void createRoundUpSavingsGoal() {
+		assertDoesNotThrow(() -> {
+			final var request = new RoundUpSavingsGoalRequest();
+			request.setSavingsGoalName("IC Savings Goal");
+			request.setMinTransactionTimestamp(LocalDateTime.of(2022, 2, 5, 0, 0).toInstant(ZoneOffset.UTC));
+			final var savingsGoal = controller.createRoundUpSavingsGoal(ACCOUNT_UID, request);
+			Thread.sleep(2000);
+			goalService.deleteSavingsGoal(ACCOUNT_UID, savingsGoal.getBody().getSavingsGoalUid());
+		});
 	}
 
 
+	@SuppressWarnings("squid:S2925")
 	void convenienceCleanUp() throws InterruptedException {
 		final var savingsGoals = List.of(
 				"a80ff46a-152d-4a40-8a8f-6ac61a194199",

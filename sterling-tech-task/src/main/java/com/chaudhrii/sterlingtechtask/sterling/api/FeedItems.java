@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class FeedItems {
-	private List<FeedItem> feedItems;
+	private List<FeedItem> feedItemsData;
 }
