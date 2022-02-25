@@ -6,11 +6,11 @@ Starling Bank tech challenge. To develop a "round-up" feature for Starling Custo
 ## Details
 | Item      | Value                        |
 | --------- | ---------------------------- |
-| Developer | Imran Chaudhri               |
-| Email     | i_chaudhri@yahoo.co.uk       |
-| Phone     | 07714262336                  |
+| Developer |                              |
+| Email     |                              |
+| Phone     |                              |
 | GitHub    | https://github.com/chaudhrii |
-| Task      | Ready to submit              |
+| Task      |                              |
 
 ## Task
 For a customer, take all the transactions in a given week and round them up to the nearest pound. For example with pending of £4.35, £5.20 and £0.87, the round-up would be £1.58.
@@ -226,14 +226,4 @@ The Smoke Test `whenCreateGbpRoundUpSavingsGoal_thenRoundUpSavingsGoalIsCreated`
 - Set appropriate `smokeTest` properties in `application.yml`
 - Un-comment test annotation in IntelliJ or chosen IDE
 - Run test
-
-## Words from IC
-
-I really enjoyed this task and would-go-so-far-as-to-say this was the best organised and set technical interview task that certainly I've ever been asked to do. I am aware that in some cases I could have done things in a more 'direct' manner to save time instead of expanding out the code as I have done. For example, I could have used ObjectMapper to pull a generic JSON response from Starling instead of unmarshalling it into classes. I made certain choices based on creating a robust and scalable application that can (if we wanted) do more clever things! Otherwise, I had given myself until Sunday (13th Feb 22) to do as much as I could to first answer the main question, then to make it offer an insight into how I was thinking at the time of the implementation.
-
-I found the API documentation and Sandbox environment a pleasure to work with. 
-
-I would like to thank Starling for the opportunity to take this technical exercise.
-
-Imran Chaudhri
 
