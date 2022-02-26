@@ -35,6 +35,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  * - When you generate data from the Sterling's Sandbox environment, you can use an appropriate UTC time here
  */
 
+// TODO : Remove this altogether, no end-to-end tests needed
 @SpringBootTest
 @AutoConfigureMockMvc
 class RoundUpGoalSmokeTest {

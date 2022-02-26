@@ -33,6 +33,7 @@ public class RoundUpSavingGoalController {
 			@RequestBody final RoundUpSavingsGoalRequest request
 	) {
 		SavingsGoal savingsGoal;
+		// TODO : Obfuscate or remove logging
 		log.info("Creating Round Up Savings Goal. accountUid: {}, request: {}", accountUid, request);
 		savingsGoal = service.createRoundUpSavingsGoal(accountUid, request);
 

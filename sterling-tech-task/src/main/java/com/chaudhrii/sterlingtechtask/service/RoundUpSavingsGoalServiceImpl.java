@@ -71,6 +71,7 @@ public class RoundUpSavingsGoalServiceImpl {
 		return savingsGoal;
 	}
 
+	// TODO : Go wide with BigDecimal
 	public static long calculateRoundUpSum(final FeedItems feedItems) {
 		var sumDecimal = 0d;
 		for (final FeedItem feedItem : feedItems.getFeedItems()) {
